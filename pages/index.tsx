@@ -9,7 +9,7 @@ export default function Home() {
       <Typography variant="h1" >Loja Virtual</Typography>
       <Typography variant="h2" sx={{mb:2}}>Todos os produtos</Typography>
 
-      <Grid container>
+      <Grid container spacing={4}> 
         {
           initialData.products.map(product => (
             <Grid item xs={6} sm={4} key={product.slug}>
