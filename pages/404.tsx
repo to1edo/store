@@ -14,6 +14,7 @@ const Page404 = () => {
           gap: 2,
           alignItems: "center",
           flexDirection: { xs: "column", sm: "row" },
+          height: "calc(100vh - 200px)",
         }}
       >
         <Typography variant="h6">Erro 404</Typography>
