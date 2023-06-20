@@ -60,4 +60,6 @@ const ProductSchema:Schema = new mongoose.Schema({
   timestamps: true
 });
 
+ProductSchema.index({title: 'text', tags:'text'});
+
 export const ProductModel: Model<IProduct> = mongoose.models.Product || mongoose.model("Product", ProductSchema);

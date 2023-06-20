@@ -17,12 +17,13 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
 
     await ProductModel.deleteMany();
     await ProductModel.insertMany(initialData.products);
-    await db.disconnect();
 
     res.status(200).json({ message: 'Data seeded' });
     
   } catch (error:any) {
     res.status(500).json({ message: error.message });
+  }finally{
+    db.disconnect();
   }
 
 }
