@@ -2,8 +2,12 @@ import Link from "next/link"
 import { AppBar, Toolbar, Box, Button, IconButton, Badge} from "@mui/material"
 import Typography from '@mui/material/Typography';
 import { SearchOutlined, ShoppingCart } from "@mui/icons-material";
+import { useRouter } from "next/router";
 
 export const NavBar = () => {
+  
+  const router = useRouter();
+
   return (
     <AppBar position="sticky">
       <Toolbar>
@@ -19,15 +23,15 @@ export const NavBar = () => {
 
         <Box sx={{display: {xs:'none', sm:'flex'}, gap: 1}}>
           <Link href="/category/men" passHref  style={{ textDecoration: "none" }}>
-            <Button sx={{display: 'flex', alignItems: 'baseline'}}>Homens</Button>
+            <Button color={router.pathname.includes('/men')?'primary':'info'} sx={{display: 'flex', alignItems: 'baseline'}} >Homens</Button>
           </Link>
 
           <Link href="/category/women" passHref  style={{ textDecoration: "none" }}>
-            <Button sx={{display: 'flex', alignItems: 'baseline'}}>Mulheres</Button>
+            <Button color={router.pathname.includes('/women')?'primary':'info'} sx={{display: 'flex', alignItems: 'baseline'}}>Mulheres</Button>
           </Link>
 
           <Link href="/category/kids" passHref  style={{ textDecoration: "none" }}>
-            <Button sx={{display: 'flex', alignItems: 'baseline'}}>Crianças</Button>
+            <Button color={router.pathname.includes('/kids')?'primary':'info'} sx={{display: 'flex', alignItems: 'baseline'}}>Crianças</Button>
           </Link>
         </Box>
 
