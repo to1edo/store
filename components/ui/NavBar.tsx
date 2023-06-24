@@ -3,10 +3,14 @@ import { AppBar, Toolbar, Box, Button, IconButton, Badge} from "@mui/material"
 import Typography from '@mui/material/Typography';
 import { SearchOutlined, ShoppingCart } from "@mui/icons-material";
 import { useRouter } from "next/router";
+import { useContext } from "react";
+import { UIContext } from "@/context";
 
 export const NavBar = () => {
   
   const router = useRouter();
+
+  const {toggleMenu} = useContext(UIContext);
 
   return (
     <AppBar position="sticky">
@@ -49,7 +53,9 @@ export const NavBar = () => {
           </IconButton>
         </Link>
 
-        <Button>Menu</Button>
+        <Button
+          onClick={()=>toggleMenu()}
+        >Menu</Button>
 
       </Toolbar>
     </AppBar>
