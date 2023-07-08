@@ -1,16 +1,25 @@
 import Link from "next/link"
-import { AppBar, Toolbar, Box, Button, IconButton, Badge} from "@mui/material"
+import { AppBar, Toolbar, Box, Button, IconButton, Badge, Input, InputAdornment, ListItem} from "@mui/material"
 import Typography from '@mui/material/Typography';
-import { SearchOutlined, ShoppingCart } from "@mui/icons-material";
+import { ClearOutlined, SearchOutlined, ShoppingCart } from "@mui/icons-material";
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UIContext } from "@/context";
 
 export const NavBar = () => {
   
   const router = useRouter();
-
   const {toggleMenu} = useContext(UIContext);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showInputText, setShowInputText] = useState(false);
+
+  const onSearchTerm = ()=>{
+    if(!searchTerm.trim().length) return ;
+    router.push(`/search/${searchTerm}`);
+    setSearchTerm('');
+    setShowInputText(false)
+  }
+
 
   return (
     <AppBar position="sticky">
@@ -25,7 +34,7 @@ export const NavBar = () => {
 
         <Box flex={1}/>
 
-        <Box sx={{display: {xs:'none', sm:'flex'}, gap: 1}}>
+        <Box sx={{display: {xs:'none', sm:showInputText?'none':'flex'}, gap: 1}} className="fadeIn">
           <Link href="/category/men" passHref  style={{ textDecoration: "none" }}>
             <Button color={router.pathname.includes('/men')?'primary':'info'} sx={{display: 'flex', alignItems: 'baseline'}} >Homens</Button>
           </Link>
@@ -41,8 +50,36 @@ export const NavBar = () => {
 
         <Box flex={1}/>
 
-        <IconButton>
-          <SearchOutlined/>
+        {
+          showInputText?
+          (
+            <Input
+              sx={ {display:showInputText?{xs:'none', sm:'flex'}:'none' , width:'250px'}}
+              value = {searchTerm}
+              onChange = {(e)=> setSearchTerm(e.target.value)}
+              onKeyPress ={(e)=> { if(e.key == 'Enter')onSearchTerm() }}
+              type="text"
+              placeholder="Buscar..."
+              className="fadeIn"
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton aria-label="toggle password visibility" >
+                    <ClearOutlined onClick={()=>{setShowInputText(false)}} />
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          ):
+          (
+            <IconButton  sx={{display:{xs:'none', sm:'flex'}}} aria-label="toggle password visibility" className="fadeIn">
+              <SearchOutlined onClick={()=>{setShowInputText(true)}} />
+            </IconButton>
+          )
+        }
+
+        {/* xs screen only */}
+        <IconButton  sx={{display:{xs:'flex', sm:'none'}}} aria-label="toggle password visibility" className="fadeIn">
+          <SearchOutlined onClick={toggleMenu} />
         </IconButton>
 
         <Link href="/" passHref  style={{ textDecoration: "none" }}>
