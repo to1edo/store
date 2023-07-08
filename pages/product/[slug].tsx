@@ -1,16 +1,23 @@
+import { FC } from "react"
+import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next"
 import { ShopLayout } from "@/components/layouts"
 import { Box, Button, Chip, Grid, Typography } from "@mui/material"
-import { initialData } from "@/database/products"
 import { ProductSlideShow, SizeSelector } from "@/components/products"
 import { ItemCounter } from "@/components/ui"
+import { IProduct } from '@/intefaces';
+import { dbProducts } from "@/database"
 
-const Product = () => {
-
-  const product = initialData.products[0]
+interface Props{
+  product: IProduct
+}
+const Product:FC<Props> = ({product}) => {
 
   return (
-    <ShopLayout title={product.title} description={product.description}>
+    <ShopLayout title={product?.title || 'Não encontrado'} description={product?.description || 'Não encontrado'}>
 
+      {
+        !product?.title?
+        <Typography variant="h1" component="h1" sx={{textAlign: 'center'}}>Produto não encontrado</Typography>:
       <Grid container spacing={3}>
 
         <Grid item xs={12} sm={7}>
@@ -62,10 +69,57 @@ const Product = () => {
           </Box>
         </Grid>
 
-      </Grid>
-
+      </Grid> 
+      }
     </ShopLayout>
   )
 }
 
 export default Product
+
+// export const getServerSideProps: GetServerSideProps = async (ctx) => {
+
+//   const {slug = ''} = ctx.query 
+//   const product = await dbProducts.getProductBySlug(slug as string)
+
+//   return {
+//     props:{
+//       product
+//     }
+//   }
+// }
+
+
+export const getStaticPaths: GetStaticPaths = async (ctx) => {
+
+  const slugs = await dbProducts.getAllProductsSlugs()
+  const paths:{params: {slug: string}}[] = slugs.map( slug => ({params: slug}))
+
+  return {
+    paths,
+    fallback:false
+  }
+}
+
+export const getStaticProps: GetStaticProps = async({ params }) => {
+
+  const {slug = ''} = params as {slug: string}
+  const product = await dbProducts.getProductBySlug(slug as string)
+
+  if(!product){
+    return {
+      redirect:{
+        destination:'/',
+        permanent:false
+      }
+    }
+  }
+
+  return {
+    props:{
+      product
+    },
+    revalidate: 60*60*24
+  }
+}
+

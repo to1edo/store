@@ -32,7 +32,7 @@ const getProductBySlug = async (req: NextApiRequest, res: NextApiResponse<Data>)
   try {
 
     await db.connect();
-    const product = await ProductModel.findOne({slug}).select("title images price inStock slug -_id").lean();
+    const product = await ProductModel.findOne({slug}).select("title images price inStock slug sizes -_id").lean();
     
     if(product){
       return res.status(200).json(product);
