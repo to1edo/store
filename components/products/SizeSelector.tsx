@@ -1,13 +1,14 @@
 import { FC } from 'react';
-import { IValidSizes } from '@/intefaces';
+import { ICartProduct, IValidSizes } from '@/intefaces';
 import { Box, Button } from '@mui/material';
 
 
 interface Props{
   sizes: IValidSizes[],
-  selectedSize?: IValidSizes
+  selectedSize?: IValidSizes,
+  selectSize: (size:IValidSizes)=>void
 }
-export const SizeSelector: FC<Props> = ({sizes, selectedSize}) => {
+export const SizeSelector: FC<Props> = ({sizes, selectedSize,selectSize}) => {
   return (
     <Box>
       {
@@ -16,6 +17,7 @@ export const SizeSelector: FC<Props> = ({sizes, selectedSize}) => {
             key={size}
             size='small'
             color={size === selectedSize ? 'primary' : 'info'}
+            onClick={() => selectSize(size)}
           >
             {size}
           </Button>

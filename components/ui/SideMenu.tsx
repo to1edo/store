@@ -64,8 +64,8 @@ export const SideMenu = () => {
               placeholder="Buscar..."
               endAdornment={
                 <InputAdornment position="end">
-                  <IconButton aria-label="toggle password visibility" >
-                    <SearchOutlined onClick={()=>onSearchTerm()} />
+                  <IconButton onClick={()=>onSearchTerm()}  aria-label="toggle password visibility" >
+                    <SearchOutlined />
                   </IconButton>
                 </InputAdornment>
               }

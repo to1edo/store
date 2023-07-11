@@ -7,7 +7,7 @@ export const getProductBySlug = async (slug:string) => {
   try {
 
     await db.connect();
-    const product = await ProductModel.findOne({slug}).select("title images price inStock slug sizes description -_id").lean();
+    const product = await ProductModel.findOne({slug}).select("title images price inStock slug sizes description gender _id").lean();
     
     if(!product){
       return null;

@@ -4,12 +4,13 @@ import Typography from '@mui/material/Typography';
 import { ClearOutlined, SearchOutlined, ShoppingCart } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
-import { UIContext } from "@/context";
+import { CartContext, UIContext } from "@/context";
 
 export const NavBar = () => {
   
   const router = useRouter();
   const {toggleMenu} = useContext(UIContext);
+  const {items} = useContext(CartContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [showInputText, setShowInputText] = useState(false);
 
@@ -63,28 +64,28 @@ export const NavBar = () => {
               className="fadeIn"
               endAdornment={
                 <InputAdornment position="end">
-                  <IconButton aria-label="toggle password visibility" >
-                    <ClearOutlined onClick={()=>{setShowInputText(false)}} />
+                  <IconButton onClick={()=>{setShowInputText(false)}} aria-label="toggle password visibility" >
+                    <ClearOutlined />
                   </IconButton>
                 </InputAdornment>
               }
             />
           ):
           (
-            <IconButton  sx={{display:{xs:'none', sm:'flex'}}} aria-label="toggle password visibility" className="fadeIn">
-              <SearchOutlined onClick={()=>{setShowInputText(true)}} />
+            <IconButton onClick={()=>{setShowInputText(true)}} sx={{display:{xs:'none', sm:'flex'}}} aria-label="toggle password visibility" className="fadeIn">
+              <SearchOutlined  />
             </IconButton>
           )
         }
 
         {/* xs screen only */}
-        <IconButton  sx={{display:{xs:'flex', sm:'none'}}} aria-label="toggle password visibility" className="fadeIn">
-          <SearchOutlined onClick={toggleMenu} />
+        <IconButton onClick={toggleMenu} sx={{display:{xs:'flex', sm:'none'}}} aria-label="toggle password visibility" className="fadeIn">
+          <SearchOutlined  />
         </IconButton>
 
-        <Link href="/" passHref  style={{ textDecoration: "none" }}>
+        <Link href="/cart" passHref  style={{ textDecoration: "none" }}>
           <IconButton sx={{}}>
-            <Badge badgeContent={2} color="secondary">
+            <Badge badgeContent={items.length} color="secondary">
               <ShoppingCart/>
             </Badge>
           </IconButton>

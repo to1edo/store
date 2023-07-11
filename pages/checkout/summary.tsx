@@ -1,3 +1,6 @@
+import { useContext } from "react";
+import NextLink from "next/link";
+import { CartContext } from "@/context";
 import { CartList, OrderSummary } from "@/components/cart";
 import { ShopLayout } from "@/components/layouts";
 import {
@@ -10,9 +13,11 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-import NextLink from "next/link";
 
 const SummaryPage = () => {
+
+  const { items } = useContext(CartContext)
+
   return (
     <ShopLayout title="Carrinho de compras" description="Carrinho de compras">
       <Typography variant="h1" component="h1">
@@ -21,7 +26,7 @@ const SummaryPage = () => {
 
       <Grid container sx={{ mt: 4 }} spacing={2}>
         <Grid item xs={12} sm={7}>
-          <CartList />
+          <CartList items={items} />
         </Grid>
 
         <Grid item xs={12} sm={5}>
