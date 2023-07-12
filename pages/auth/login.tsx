@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { AuthLayout } from "@/components/layouts";
 import { Box, Button, Chip, Grid, TextField, Typography } from "@mui/material";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { isEmail } from "@/utils";
-import {shopApi} from "@/api";
 import { ErrorOutline } from "@mui/icons-material";
+import { AuthContext } from "@/context";
 
 type Inputs = {
   email: string;
@@ -13,7 +14,9 @@ type Inputs = {
 };
 const LoginPage = () => {
 
+  const {loginUser} = useContext(AuthContext)
   const [showError, setShowError] = useState(false)
+  const router = useRouter()
 
   const {
     register,
@@ -21,16 +24,19 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async(formData) => {
-    await shopApi.post('/user/login',{...formData})
-    .then(({data})=>console.log(data))
-    .catch(error =>{ 
-      console.log(error.response.data.message); 
-      setShowError(true)
+  const onSubmit: SubmitHandler<Inputs> = async({email, password}) => {
+    
+    const res = await loginUser(email, password)
+
+    if(!res){
+      setShowError(!res)
       setTimeout(() => {
         setShowError(false) 
       }, 3000);
-    })
+      return
+    }
+    router.replace('/')
+
   }
 
   return (

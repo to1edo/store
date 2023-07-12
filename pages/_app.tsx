@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app'
 import {lightTheme} from '@/themes'
 import { SWRConfig } from 'swr'
 import { UIProvider, CartProvider } from '@/context';
+import { Authprovider } from '@/context/auth'
 
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -14,16 +15,20 @@ export default function App({ Component, pageProps }: AppProps) {
         fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
       }}
     >
-      <UIProvider>
-        <CartProvider>
+      <Authprovider>
 
-          <ThemeProvider theme={lightTheme}>
-            <CssBaseline/>
-            <Component {...pageProps} />
-          </ThemeProvider>
+        <UIProvider>
+          <CartProvider>
 
-        </CartProvider>
-      </UIProvider>
+            <ThemeProvider theme={lightTheme}>
+              <CssBaseline/>
+              <Component {...pageProps} />
+            </ThemeProvider>
+
+          </CartProvider>
+        </UIProvider>
+        
+      </Authprovider>
     </SWRConfig>
   )
 }

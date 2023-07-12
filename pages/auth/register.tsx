@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState , useContext} from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
 import { AuthLayout } from "@/components/layouts";
 import { Box, Button, Chip, Grid, TextField, Typography } from "@mui/material";
-import Link from "next/link";
-
 import { useForm, SubmitHandler } from "react-hook-form";
 import { isEmail } from "@/utils";
 import { shopApi } from "@/api";
 import { ErrorOutline } from "@mui/icons-material";
+import {AuthContext} from "@/context"
 
 type Inputs = {
   name: string;
@@ -14,27 +15,31 @@ type Inputs = {
   password: string;
 };
 const RegisterPage = () => {
-  const [showError, setShowError] = useState(false);
 
+  const {registerUser} = useContext(AuthContext)
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const router = useRouter()
+  
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async (formData) => {
-    await shopApi
-      .post("/user/register", { ...formData })
-      .then(({ data }) => console.log(data))
-      .catch((error) => {
+  const onSubmit: SubmitHandler<Inputs> = async ({email, password, name}) => {
+    const res = await registerUser(email, password, name)
 
-        console.log(error.response.data.message);
-        setShowError(true);
-        setTimeout(() => {
-          setShowError(false);
-        }, 3000);
+    if(res.error){
+      setShowError(res.error)
+      setErrorMessage(res.message!)
+      setTimeout(() => {
+        setShowError(false) 
+      }, 3000);
+      return
+    }
+    router.replace('/')
 
-      });
   };
 
   return (
@@ -46,7 +51,7 @@ const RegisterPage = () => {
               <Typography variant="h1">Criar uma conta</Typography>
 
               <Chip
-                label="Erro ao fazer registro"
+                label={errorMessage}
                 color="error"
                 icon={<ErrorOutline/>}
                 sx={{display: showError? 'flex':'none'}}

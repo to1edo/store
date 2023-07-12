@@ -11,7 +11,6 @@ type Data = { message: string }|
   name:string;
   email:string;
   role:'admin'|'client';
-  _id:string
 }
 export default async function handler(req:NextApiRequest, res:NextApiResponse<Data>) {
 
@@ -31,7 +30,7 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse<Da
       
       if(isMatch){
 
-        const {password,createdAt,updatedAt, ...result} = user;
+        const {_id,password,createdAt,updatedAt, ...result} = user;
         
         const token = jwt.sign({ id:user._id}, process.env.JWT_SECRET_KEY!, { expiresIn: '12h' });
 
