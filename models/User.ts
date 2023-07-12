@@ -1,5 +1,6 @@
-import mongoose, {Schema, Model} from "mongoose";
+import mongoose, {Schema, Model, CallbackError} from "mongoose";
 import { IUser } from "@/intefaces";
+import bcrypt from 'bcryptjs';
 
 const UserSchema:Schema = new mongoose.Schema({
   name: {
@@ -26,6 +27,24 @@ const UserSchema:Schema = new mongoose.Schema({
   }
 }, {
   timestamps: true
+});
+
+UserSchema.pre('save', async function(next) {
+  const user = this;
+
+  if (!user.isModified('password')) {
+    return next();
+  }
+
+  try {
+    
+    const hashedPassword = bcrypt.hashSync(user.password);
+    user.password = hashedPassword;
+    next();
+
+  } catch (error) {
+    return next(error as CallbackError);
+  }
 });
 
 export const UserModel: Model<IUser> = mongoose.models.User || mongoose.model("User", UserSchema);
