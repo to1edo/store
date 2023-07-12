@@ -1,5 +1,5 @@
 import { db, initialData } from '@/database';
-import { ProductModel } from '@/models';
+import { ProductModel, UserModel } from '@/models';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req:NextApiRequest, res:NextApiResponse) {
@@ -17,6 +17,9 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
 
     await ProductModel.deleteMany();
     await ProductModel.insertMany(initialData.products);
+
+    await UserModel.deleteMany();
+    await UserModel.insertMany(initialData.users);
 
     res.status(200).json({ message: 'Data seeded' });
     
