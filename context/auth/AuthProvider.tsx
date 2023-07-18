@@ -1,7 +1,8 @@
 import { FC, ReactNode,useEffect,useReducer } from 'react';
-import { AuthContext, AuthReducer, IAuthUser } from './';
-import { shopApi } from '@/api';
+import { useRouter } from 'next/router';
 import cookie from 'js-cookie'
+import { shopApi } from '@/api';
+import { AuthContext, AuthReducer, IAuthUser } from './';
 
 export interface Authstate{
   isLoggedIn:boolean,
@@ -18,7 +19,8 @@ interface Props{
 export const Authprovider:FC<Props> = ({children}) => {
 
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE)
-
+  const router = useRouter()
+  
   const loginUser = async(email:string, password:string):Promise<boolean> => {
     try {
 
@@ -53,6 +55,12 @@ export const Authprovider:FC<Props> = ({children}) => {
     }
   }
 
+  const logout = () =>{
+    cookie.remove('token')
+    cookie.remove('cartItems')
+    router.reload()
+  }
+
   const checkToken = async()=>{
     try{
       const { data } = await shopApi('/user/validate-token')
@@ -76,7 +84,8 @@ export const Authprovider:FC<Props> = ({children}) => {
 
       //methods
       loginUser,
-      registerUser
+      registerUser,
+      logout
     }}>
       {children}
     </AuthContext.Provider>

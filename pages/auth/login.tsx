@@ -35,7 +35,9 @@ const LoginPage = () => {
       }, 3000);
       return
     }
-    router.replace('/')
+
+    const destination = router.query.p?.toString() || '/'
+    router.replace(destination)
 
   }
 
@@ -97,7 +99,7 @@ const LoginPage = () => {
             </Grid>
 
             <Grid item xs={12} display="flex" justifyContent="end">
-              <Link href="/auth/register">
+              <Link href={`/auth/register${router.query.p?.toString()? `?p=${router.query.p?.toString()}` :''}`}>
                 <Typography color="secondary" variant="body2" sx={{ mt: 1 }}>
                   Não tem uma conta?
                 </Typography>

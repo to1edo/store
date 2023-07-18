@@ -26,9 +26,12 @@ import {
   SearchOutlined,
   VpnKeyOutlined,
 } from "@mui/icons-material";
-import { UIContext } from "@/context";
+import { AuthContext, UIContext } from "@/context";
+import Link from "next/link";
 
 export const SideMenu = () => {
+
+  const {isLoggedIn, user, logout} = useContext(AuthContext)
   const { isMenuOpen, toggleMenu } = useContext(UIContext);
   const router = useRouter();
 
@@ -72,78 +75,96 @@ export const SideMenu = () => {
             />
           </ListItem>
 
-          <ListItemButton>
-            <ListItemIcon>
-              <AccountCircleOutlined />
-            </ListItemIcon>
-            <ListItemText primary={"Perfil"} />
-          </ListItemButton>
+          {
+            isLoggedIn && (
+              <>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <AccountCircleOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={"Perfil"} />
+                </ListItemButton>
 
-          <ListItemButton>
-            <ListItemIcon>
-              <ConfirmationNumberOutlined />
-            </ListItemIcon>
-            <ListItemText primary={"Mis Ordenes"} />
-          </ListItemButton>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <ConfirmationNumberOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={"Mis Ordenes"} />
+                </ListItemButton>
 
-          <ListItemButton  sx={{ display: { xs: "", sm: "none" } }} onClick={()=>navigateTo('/category/men')}>
-            <ListItemIcon>
-              <MaleOutlined />
-            </ListItemIcon>
-            <ListItemText primary={"Hombres"} />
-          </ListItemButton>
+                <ListItemButton  sx={{ display: { xs: "", sm: "none" } }} onClick={()=>navigateTo('/category/men')}>
+                  <ListItemIcon>
+                    <MaleOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={"Hombres"} />
+                </ListItemButton>
 
-          <ListItemButton sx={{ display: { xs: "", sm: "none" } }} onClick={()=>navigateTo('/category/women')}> 
-            <ListItemIcon>
-              <FemaleOutlined />
-            </ListItemIcon>
-            <ListItemText primary={"Mujeres"} />
-          </ListItemButton>
+                <ListItemButton sx={{ display: { xs: "", sm: "none" } }} onClick={()=>navigateTo('/category/women')}> 
+                  <ListItemIcon>
+                    <FemaleOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={"Mujeres"} />
+                </ListItemButton>
 
-          <ListItemButton sx={{ display: { xs: "", sm: "none" } }} onClick={()=>navigateTo('/category/kids')}>
-            <ListItemIcon>
-              <EscalatorWarningOutlined />
-            </ListItemIcon>
-            <ListItemText primary={"Niños"} />
-          </ListItemButton>
+                <ListItemButton sx={{ display: { xs: "", sm: "none" } }} onClick={()=>navigateTo('/category/kids')}>
+                  <ListItemIcon>
+                    <EscalatorWarningOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={"Niños"} />
+                </ListItemButton>
 
-          <ListItemButton>
-            <ListItemIcon>
-              <VpnKeyOutlined />
-            </ListItemIcon>
-            <ListItemText primary={"Ingresar"} />
-          </ListItemButton>
+                <ListItemButton onClick={logout}>
+                  <ListItemIcon>
+                    <LoginOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={"Salir"} />
+                </ListItemButton>
+              </>
+            )
+          }
 
-          <ListItemButton>
-            <ListItemIcon>
-              <LoginOutlined />
-            </ListItemIcon>
-            <ListItemText primary={"Salir"} />
-          </ListItemButton>
+          {
+            !isLoggedIn && (
+              <ListItemButton onClick={()=> navigateTo(`/auth/login?p=${router.asPath}`)}>
+                <ListItemIcon>
+                  <VpnKeyOutlined />
+                </ListItemIcon>
+                <ListItemText primary={"Ingresar"} />
+              </ListItemButton>
+            )
+          }
+
 
           {/* Admin */}
-          <Divider />
-          <ListSubheader>Admin Panel</ListSubheader>
 
-          <ListItemButton>
-            <ListItemIcon>
-              <CategoryOutlined />
-            </ListItemIcon>
-            <ListItemText primary={"Productos"} />
-          </ListItemButton>
-          <ListItemButton>
-            <ListItemIcon>
-              <ConfirmationNumberOutlined />
-            </ListItemIcon>
-            <ListItemText primary={"Ordenes"} />
-          </ListItemButton>
+          {
+            isLoggedIn && user?.role === 'admin' && (
+              <>
+                <Divider />
+                <ListSubheader>Admin Panel</ListSubheader>
 
-          <ListItemButton>
-            <ListItemIcon>
-              <AdminPanelSettings />
-            </ListItemIcon>
-            <ListItemText primary={"Usuarios"} />
-          </ListItemButton>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <CategoryOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={"Productos"} />
+                </ListItemButton>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <ConfirmationNumberOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={"Ordenes"} />
+                </ListItemButton>
+
+                <ListItemButton>
+                  <ListItemIcon>
+                    <AdminPanelSettings />
+                  </ListItemIcon>
+                  <ListItemText primary={"Usuarios"} />
+                </ListItemButton>
+              </>
+            )
+          }
         </List>
       </Box>
     </Drawer>
